@@ -75,6 +75,7 @@ int mySocket::Recv()
         perror("recv()");
         return -1;
     }
+    if (recvBuffer[sizeof(recvBuffer -1] 
     std::cout << "RECV <--: " << recvBuffer << std::endl;
     return 0;
     //XXX Vérifier si l'intégralité du message est arrivée.
