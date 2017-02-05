@@ -13,15 +13,8 @@ class mySocket
     int         sockFd;
     char        recvBuffer[512];
 
-    // --- Variables nécessaires à select() ---
-    // Timeout vars pour select()
-    //const struct timeval timeout;
-    //timeout.tv_sec  = 5;
-    //timeout.tv_usec = 0;
-    // les Sets de FD pour select()
+    // Variables nécessaires à select()
     fd_set  readFds, writeFds;
-   // --- Fin des vars pour select() ---
-
 
     public:
     int     Socket();
@@ -35,7 +28,7 @@ class mySocket
 
     mySocket (const std::string, int);
     mySocket();
-    ~mySocket();    //XXX L'objet n'est pas détruit à la fin du programme
+    ~mySocket();
 };
 
 #endif
