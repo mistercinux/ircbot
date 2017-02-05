@@ -16,7 +16,7 @@ mySocket::mySocket (const std::string serverIp_, int serverPort_)
 
     Socket();
 
-    std::cout << "Bot Initialisé.\nIP: " << serverIp_.c_str() << "\nPort : "<< serverPort_ << "\nSockFd: " << sockFd << std::endl;
+    std::cout << "Bot Initialisé.\nIP: " << serverIp_.c_str() << "\nPort : "<< serverPort_ << std::endl;
 
 }
 
@@ -75,26 +75,8 @@ int mySocket::Recv()
         perror("recv()");
         return -1;
     }
-    std::cout << "RECV <--: " << recvBuffer << std::endl;
     return 0;
     //XXX Vérifier si l'intégralité du message est arrivée.
-}
-
-
-// Fonction de gestion des évènements
-int mySocket::GetEvent()
-{
-    FD_ZERO (&readFds);
-    FD_SET  (sockFd, &readFds);
- 
-    int event=0;
-    event = select((sockFd+1), &readFds, &writeFds, NULL, NULL);
-    if (event == -1) { perror("Select()"); return -1;}
-    else if FD_ISSET(sockFd, &readFds)
-    {
-        std::cout << "Données reçues" << std::endl;
-    }
-    return 1;
 }
 
 

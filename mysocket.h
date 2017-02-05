@@ -21,7 +21,6 @@ class mySocket
     int     Connect();
     int     Send(const std::string);
     int     Recv();
-    int     GetEvent();
     int     Pong();
     char*   GetBuffer() { return recvBuffer; }
 

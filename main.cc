@@ -17,25 +17,22 @@ int main()
         delete[] &ircBot;
         return -1;
     }
-    ircBot.Send("USER yollande84 * * : yollande84\r\n");
-    ircBot.Send("NICK yollande84\r\n");
+    ircBot.Send("USER NoUser * * : Bot\r\n");
+    ircBot.Send("NICK SamBot`\r\n");
     ircBot.Send("JOIN #justcodeit\r\n");
 
     // Boucle principale //
     int exitnow = 0;
     while (exitnow != 1)
     {
-        if (ircBot.GetEvent())
-        {
-            ircBot.Recv();
-            buffer = ircBot.GetBuffer();
+        ircBot.Recv();
+        buffer = ircBot.GetBuffer();
 
-            // EXIT ?
-            if (buffer.find("!quit\r\n") != std::string::npos) { exitnow = 1; }
-
-            // PING / PONG
-            if (buffer.substr(0,6) == "PING :") { ircBot.Send("PONG :" + buffer.substr(6) + "\r\n"); }
-        }
+        std::cout << buffer;
+        // EXIT ?
+        if (buffer.find("!quit\r\n") != std::string::npos) { exitnow = 1; }
+        // PING / PONG
+        if (buffer.substr(0,6) == "PING :") { ircBot.Send("PONG :" + buffer.substr(6)); }
     }
 
     return 0;
