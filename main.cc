@@ -12,7 +12,11 @@ int main()
 
     mySocket ircBot("173.230.128.213", 6667);
 
-    ircBot.Connect();
+    if (ircBot.Connect() == -1)
+    {
+        delete[] &ircBot;
+        return -1;
+    }
     ircBot.Send("USER yollande84 * * : yollande84\r\n");
     ircBot.Send("NICK yollande84\r\n");
     ircBot.Send("JOIN #justcodeit\r\n");
