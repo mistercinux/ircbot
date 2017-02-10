@@ -2,7 +2,7 @@ CXX=g++
 CXXFLAGS=-Wall -std=c++11
 LIBS=
 
-SOURCES=main.cc mysocket.cc
+SOURCES=main.cc socket.cc
 
 OBJECTS=$(SOURCES:.cc=.o)
 

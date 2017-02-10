@@ -4,19 +4,28 @@
 #include <sys/types.h>
 #include <unistd.h>         // pour close(socketID)
 #include <arpa/inet.h>      // pour htons()
-#include "mysocket.h"
+#include "socket.h"
 
-int main()
+int main(int argc, char** argv)
 {
     std::string buffer;
-
-    mySocket ircBot("173.230.128.213", 6667);
-
-    if (ircBot.Connect() == -1)
+    std::string hostname = "irc.freenode.net";
+    
+    if (argc > 2) { std::cout << "Usage: " << argv[0] << " host\n" << std::endl; return 1; }
+    else if (argc == 2) { hostname = argv[1]; }
+    else 
     {
-        delete[] &ircBot;
-        return -1;
+        std::cout << ":: The default server is irc.freenode.net ::" << std::endl;
+        std::cout << "If you're looking to connect to another server, try : " << argv[0] << " host" << std::endl;
     }
+
+
+    mySocket ircBot(hostname.c_str(), 6667);
+
+    std::cout << "FLAG0" << std::endl;
+
+    if (ircBot.Connect() == -1) { return 1; }
+
     ircBot.Send("USER NoUser * * : Bot\r\n");
     ircBot.Send("NICK SamBot`\r\n");
     ircBot.Send("JOIN #justcodeit\r\n");

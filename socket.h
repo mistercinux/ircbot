@@ -4,7 +4,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <iostream>
-#include <sys/time.h>
 
 class mySocket
 {
