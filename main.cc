@@ -6,6 +6,7 @@
 #include <unistd.h>         // pour close(socketID)
 #include <arpa/inet.h>      // pour htons()
 #include "socket.h"
+#include <unistd.h>
 
 typedef struct host_settings {
     int port                = 6667;
@@ -40,6 +41,8 @@ int main(int argc, char** argv)
 
     ircBot.Send("USER IRC_BOT * * : Bot\r\n");
     ircBot.Send("NICK " + set.nickname + "\r\n");
+    sleep(2);
+    ircBot.Send("JOIN " + set.channel + "\r\n");
 
     // Boucle principale //
     int exitnow = 0;
