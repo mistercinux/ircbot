@@ -5,8 +5,10 @@
 #include <sys/types.h>
 #include <unistd.h>         // pour close(socketID)
 #include <arpa/inet.h>      // pour htons()
+#include <unistd.h>         // sleep()
+#include <signal.h>         // sigaction()
+#include <string.h>         // memset()
 #include "socket.h"
-#include <unistd.h>
 
 typedef struct host_settings {
     int port                = 6667;
@@ -20,11 +22,30 @@ typedef struct host_settings {
 // Prototype of getArgs() witch check the options
 int getArgs(int argc, char** argv, host_settings* hset); 
 
+// Fonction de gestion de SIGINT
+void sig_handle (int sig, siginfo_t* siginfo, void* context); // le 3e arg n'est quasiment jamais utilisé par sigaction()
 
+// Variable globale pour pouvoir quitter proprement le main en cas de SIGINT. (sig_handle() lui assignera la valeur de 1)
+int glob_sigint_detected = 0;
+
+// Fonction principale
 int main(int argc, char** argv)
 {
     std::string buffer;
     host_settings set;
+
+    // définition de la structure nécessaire à la récupération du SIGINT
+    struct sigaction act;
+    memset(&act, '\0', sizeof(act));
+    act.sa_sigaction = &sig_handle;
+    act.sa_flags = SA_SIGINFO;
+
+    if (sigaction(SIGINT, &act, NULL) < 0)
+    {
+        perror("Impossible de lier l'action de SIGINT (ctrl+c) au programme.");
+        return 1;
+    }
+
 
     if (getArgs(argc, argv, &set) < 0)
     {
@@ -49,6 +70,7 @@ int main(int argc, char** argv)
     int connected = 0;
     while (exitnow != 1)
     {
+        if (glob_sigint_detected) { return 0; } // On quitte si l'utilisateur fait un  CTRL + C
         ircBot.Recv();
         buffer = ircBot.GetBuffer();
 
@@ -71,9 +93,7 @@ int main(int argc, char** argv)
 }
 
 
-/*
- * RECUPERATION DES ARGUMENTS 
- */
+/***** RECUPERATION DES ARGUMENTS *****/
 int getArgs(int argc, char** argv, host_settings* hset) 
 {
     if (argc == 1) { return 0; }
@@ -120,3 +140,9 @@ int getArgs(int argc, char** argv, host_settings* hset)
     return 0;
 }
 
+// Fonction de gestion d'évènement lorsque le SIGINT (CTRL+C) est détecté.
+void sig_handle (int sig, siginfo_t* siginfo, void* context) // le 3e arg n'est quasiment jamais utilisé par sigaction()
+{
+    std::cout << "\n\nProgramme en cours de fermeture..." << std::endl;
+    glob_sigint_detected = 1;
+}
